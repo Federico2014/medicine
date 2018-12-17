@@ -12,7 +12,7 @@ module.exports = {
     // Lấy thông tin nhà cung cấp theo id
     providerByCode: async (req, res) => {
         let code = req.query.code;
-
+        
         if (!code || code == '') return res.json({
             status: 400
         });
@@ -79,8 +79,7 @@ module.exports = {
     },
 
     // Lấy thông tin thuốc theo id
-    medicineByCode: async (req, res) => {
-        console.log(req);
+    medicineByCode: async (req, res) => { 
         let code = req.query.code;
         if (!code || code == '') return res.json({
             status: 400

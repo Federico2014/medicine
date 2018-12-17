@@ -342,7 +342,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary register" onclick="postEditMedicine();$('#modalEditMedicine').modal('hide');">Save</button>
+                        <button type="button" class="btn btn-primary" onclick="postEditMedicine();">Save</button>
                     </div>
                 </div>
             </div>
@@ -390,7 +390,7 @@
         </div>
 
 
-        <div class="show-status hidden box-msg">
+        <div class="show-status  box-msg" style="display: none;">
             <div class="box-close">
                 <i class="fa fa-times-circle btn-close"></i>
             </div>
@@ -398,7 +398,7 @@
             <p><a href="https://ropsten.etherscan.io/tx/" target="_blank"></a></p>
         </div>
 
-        <div class="show-error hidden box-msg">
+        <div class="show-error box-msg" style="display: none;">
             <div class="box-close">
                 <i class="fa fa-times-circle btn-close"></i>
             </div>
@@ -649,10 +649,11 @@
                         signImage(imgByte, account).then(resSign => {
                             imgNotExist(imgByte, account, 0).then(resCheck => {
                                 if (resCheck == true) {
+
                                     signUpProvider($('#nameRegisterProvider').val(), $('#streetRegisterProvider').val(), $(
                                         '#phoneRegisterProvider').val(), imgByte, resSign.msgHash, resSign.signMSG).then(() => {
-                                            location.reload();
                                             $('#modalRegisterProvider').modal('hide');
+                                            location.reload();
                                         });
                                 } else {
                                     showError("Error", "Image are already registered");
@@ -724,10 +725,10 @@
                                                         '#priceRegisterMedicine').val(),
                                             imgByte, resSign.msgHash, resSign.signMSG).then(
                                                 () => {
-
+                                                    $('#modalRegisterMedicine').modal('hide');
                                                     location.reload();
                                                 });
-                                            $('#modalRegisterMedicine').modal('hide');
+
                                     } else {
                                         showError("Error", "Image are already registered");
                                     }
@@ -747,6 +748,7 @@
             }
 
             function getEditMedicine(id, name, ingredient, benefit, by, detail, price, srcImage) {
+                console.log("Start get");
                 $('#idEditMedicine').val(id);
                 $('#nameEditMedicine').val(name);
                 $('#ingredientEditMedicine').val(ingredient);
@@ -802,6 +804,7 @@
             }
 
             async function postEditMedicine() {
+                console.log("Start");
                 var imgByte;
                 var account = await getAccount();
                 var flag = false;
@@ -823,6 +826,7 @@
                 {
                     flag = true
                 }
+                console.log(flag)
                 // markLoading($(".modal-footer"));
                 if(flag == false) {
                     if ($("#imageEditMedicine")[0].files[0]) {
@@ -850,6 +854,7 @@
                                     $('#detailEditMedicine').val(), $('#priceEditMedicine').val(),
                                     imgByte, resSign.msgHash, resSign.signMSG).then(
                                         () => {
+                                            $('#modalEditMedicine').modal('hide');
                                             location.reload();
                                         });
                             } else {
@@ -858,6 +863,8 @@
                         });
                     });
                 } else {
+                    console.log("Erroor");
+                    
                     showError("Error", "Please fill full data");
                 }
 

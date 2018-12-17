@@ -232,7 +232,8 @@ contract Authorised is Owner {
         uint _identifier, 
         address _from, 
         uint _value,
-        uint8 _type
+        uint8 _type,
+        address _author
     ) 
         public 
     {
@@ -246,6 +247,8 @@ contract Authorised is Owner {
             time: now,
             status: false
         });
+
+
         
         if(_trans.Type == 4 || _trans.Type == 1  || _trans.Type == 2 || _trans.Type == 6 || _trans.Type == 7 || _trans.Type == 5) {
             for(uint i = 0; i < transactionCount; i++) {
@@ -255,15 +258,18 @@ contract Authorised is Owner {
             }                
         }
         if(_trans.Type == 2 || _trans.Type == 5) {
-            idsTransactionBlocked[_trans.identifier] = transactionCount;
+            idsTransactionBlocked[_trans.identifier] = transactionCount;   
             blocked[_trans.identifier] = true;
+            confirmations[transactionCount][_author] = true;
+            _trans.numberOfComfirmed += 1;
             
         }
         if(_trans.Type == 6 || _trans.Type == 7 ) {
             idsTransactionUnlocked[_trans.identifier] = transactionCount;
             unlocked[_trans.identifier] = true;
+            confirmations[transactionCount][_author] = true;
+            _trans.numberOfComfirmed += 1;
         }
-        
         transactions[transactionCount] = _trans;
         transactionCount += 1;
     }
@@ -701,9 +707,5 @@ contract Authorised is Owner {
             }
         }
         return _p;
-    }
-    
-
-    
-    
+    } 
 }

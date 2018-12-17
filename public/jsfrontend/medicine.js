@@ -161,24 +161,48 @@ async function reportMedicine(id, address, email, street, phone, content) {
         })
 }
 
-async function blockMedicine(id) {
+async function blockMedicine(id, type, _addr ) {
     account = await getAccount();
-    return await MedicineContract.methods.blockMedicine(id)
+    var _type = parseInt(type)
+    if(_type == 0) {
+        ProviderContract.methods.blockProvider(id, _addr).send({
+            from: account
+        }).on('transactionHash', function (hash) {
+            showStatusPending('Pendding transaction', hash);
+        });
+    }
+
+    if(_type == 1) {
+        MedicineContract.methods.blockMedicine(id)
         .send({
             from: account,
         }).on('transactionHash', function (hash) {
             showStatusPending('Pendding transaction', hash);
-        })
+        });
+    }
+
 }
 
-async function unlockMedicine(id) {
+async function unlockMedicine(id, type, _addr) {
     account = await getAccount();
-    return await MedicineContract.methods.unlockMedicine(id)
+    _type = parseInt(type)
+    if(_type == 0) {
+        ProviderContract.methods.unlockProvider(id, _addr).send({
+            from: account
+        }).on('transactionHash', function (hash) {
+            showStatusPending('Pendding transaction', hash);
+        })
+    }
+
+    if(_type == 1) {
+        MedicineContract.methods.unlockMedicine(id)
         .send({
             from: account,
         }).on('transactionHash', function (hash) {
             showStatusPending('Pendding transaction', hash);
         })
+    }
+
 }
 
 async function checkIsAccount() {

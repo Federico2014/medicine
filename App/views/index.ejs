@@ -167,7 +167,7 @@
     </div>
 
 
-    <div class="show-status hidden box-msg">
+    <div class="show-status  box-msg" style="display: none;">
       <div class="box-close">
         <i class="fa fa-times-circle btn-close"></i>
       </div>
@@ -175,7 +175,7 @@
       <p><a href="https://ropsten.etherscan.io/tx/" target="_blank"></a></p>
     </div>
 
-    <div class="show-error hidden box-msg">
+    <div class="show-error box-msg" style="display: none;">
       <div class="box-close">
         <i class="fa fa-times-circle btn-close"></i>
       </div>
@@ -304,15 +304,14 @@
                 medicineId: res.medicine[0][0],
                 providerAddress: res.medicine[1]
               }, function (infoDigital) {
-                console.log(infoDigital)
                 if (infoDigital.data[6] == true && infoDigital.data[0] != 0) {
-                  $('#btnLock').html(`<a onclick="blockMedicine('${$('#textSearch').val()}')" class="social-link rounded-circle text-white mr-3" href="javascript:void(0)">
+                  $('#btnLock').html(`<a onclick="blockMedicine('${$('#textSearch').val()}', '1', '${res.medicine[1]}')" class="social-link rounded-circle text-white mr-3" href="javascript:void(0)">
                                       <img src="/images/lock.png" alt="">
                                     </a>`)
                   document.getElementById('btnLock').hidden = false
                   document.getElementById('btnUnlock').hidden = true
                 } else if (infoDigital.data[6] == false && infoDigital.data[0] != 0) {
-                  $('#btnUnlock').html(`<a onclick="unlockMedicine('${$('#textSearch').val()}')" class="social-link rounded-circle text-white mr-3" href="javascript:void(0)">
+                  $('#btnUnlock').html(`<a onclick="unlockMedicine('${$('#textSearch').val()}', '1', '${res.medicine[1]}')" class="social-link rounded-circle text-white mr-3" href="javascript:void(0)">
                                       <img src="/images/unlock.png" alt="">
                                     </a>`)
                   document.getElementById('btnLock').hidden = true
@@ -331,21 +330,46 @@
           $.get("/api/providerByCode", {
             code: $('#textSearch').val()
           }, function (res) {
-            if (res.status == 200 && res.provider[1] != 0) {
-              $('#resultImage').html('<img class="img-fluid" src="https://ipfs.io/ipfs/' + res.provider[5] +
-                '" alt="">');
-              $('#resultName').html('<b>' + res.provider[2] + '</b>');
-              $('#detailResult').html(
-                `<p><b>ID:</b> ${res.provider[1]}</p>
-                        <p><b>Street:</b> ${res.provider[3]}</p>
-                        <p><b>Phone: </b>${res.provider[4]}</p>`
-              );
-              document.getElementById('noResult').hidden = true;
-              document.getElementById('contentResult').hidden = false;
-            } else {
-              document.getElementById('noResult').hidden = false;
-              document.getElementById('contentResult').hidden = true;
-            }
+              if(res.status == 200 ) {
+                checkIsManager().then(isManager =>  {
+                    if (res.status == 200 && res.provider[1] != 0) {
+                      $('#resultImage').html('<img class="img-fluid" src="https://ipfs.io/ipfs/' + res.provider[5] +
+                        '" alt="">');
+                      $('#resultName').html('<b>' + res.provider[2] + '</b>');
+                      $('#detailResult').html(
+                        `<p><b>ID:</b> ${res.provider[1]}</p>
+                                <p><b>Street:</b> ${res.provider[3]}</p>
+                                <p><b>Phone: </b>${res.provider[4]}</p>
+                                <p><b>Status: </b>${res.provider[6]}</p>
+                                `
+                      );
+
+                      if(isManager) {
+                          if(res.provider[1] != 0 && res.provider[6] == true) {
+                            $('#btnLock').html(`<a onclick="blockMedicine('${$('#textSearch').val()}', '0', '${res.provider[0]}')" class="social-link rounded-circle text-white mr-3" href="javascript:void(0)">
+                                                  <img src="/images/lock.png" alt="">
+                              </a>`)
+                            document.getElementById('btnLock').hidden = false
+                            document.getElementById('btnUnlock').hidden = true
+                          }
+
+                          if(res.provider[1] != 0 && res.provider[6] == false) {
+                            $('#btnUnlock').html(`<a onclick="unlockMedicine('${$('#textSearch').val()}', '0', '${res.provider[0]}')" class="social-link rounded-circle text-white mr-3" href="javascript:void(0)">
+                                                  <img src="/images/unlock.png" alt="">
+                              </a>`)
+                              document.getElementById('btnLock').hidden = true
+                              document.getElementById('btnUnlock').hidden = false
+                          }
+                      }
+                      
+                      document.getElementById('noResult').hidden = true;
+                      document.getElementById('contentResult').hidden = false;
+                    } else {
+                      document.getElementById('noResult').hidden = false;
+                      document.getElementById('contentResult').hidden = true;
+                    }
+                })
+              }
           });
         }
         document.getElementById('result').hidden = false;
@@ -374,13 +398,15 @@
     }
 
     async function getViewDigitalCertificate(medicineCode) {
+      console.log(medicineCode);
       account = await getAccount();
+      let imgHash;
       $.get("/api/medicineByCode", {
         code: medicineCode
       }, function (res) {
         console.log('medicineByCode', res);
-        medicine = res.medicine;
-        provider = res.provider;
+        let medicine = res.medicine;
+        let provider = res.provider;
         $('#digitalImageMedicine').attr("src", "https://ipfs.io/ipfs/" + medicine[0][7]);
         $('#digitalIDMedicine').html(medicine[0][0]);
         $('#digitalNameMedicine').html('<b>Name:</b> ' + medicine[0][1]);

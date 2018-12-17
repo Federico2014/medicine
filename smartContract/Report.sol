@@ -105,10 +105,10 @@ contract Reports {
     {
         Authorised _author =  Authorised(authorContractAddress);
         if(reports[_id].length == 0) {
-            _author.submitTransaction(_id, _addr, 0, 8);
+            _author.submitTransaction(_id, _addr, 0, 8, msg.sender);
         } else {
             if(reports[_id].length > 0 && reports[_id][reports[_id].length - 1].status == true) {
-                _author.submitTransaction(_id, _addr, 0, 8);
+                _author.submitTransaction(_id, _addr, 0, 8, msg.sender);
             }
         }
 

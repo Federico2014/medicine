@@ -113,7 +113,7 @@ contract Providers is Owner {
         setDataBeforeSignUp(_name, _street, _phone, _imgHash, _messageHash, _signHash, id);
         Authorised _author =  Authorised(authorContractAddress);
         authorContractAddress.transfer(10 wei); // send value to smart contract;
-        _author.submitTransaction(id, msg.sender, msg.value, 0); // indentifier, from, value, ,, type  goi tu contract Author
+        _author.submitTransaction(id, msg.sender, msg.value, 0, msg.sender); // indentifier, from, value, ,, type  goi tu contract Author
     }
     
     function setDataBeforeSignUp(
@@ -159,7 +159,7 @@ contract Providers is Owner {
         require(_imgHash.length != 0);
         providerUpdating[msg.sender].push(Provider(provider[msg.sender].addr, _id, _name, _street, _phone,_imgHash, true)) ;
         Authorised _author = Authorised(authorContractAddress);
-        _author.submitTransaction(_id, msg.sender, 0, 1);
+        _author.submitTransaction(_id, msg.sender, 0, 1, msg.sender);
         Signature  _sig = Signature(signatureContractAddress);
         _sig.setimageSignature(msg.sender, _imgHash, _messageHash, _signHash, _id);
     }
@@ -221,7 +221,7 @@ contract Providers is Owner {
         if(_isBlock) {
             _author.confirmedTransaction(_idsTran);
         } else {
-             _author.submitTransaction(_id, _addr, 0, 2); 
+             _author.submitTransaction(_id, _addr, 0, 2, msg.sender); 
         }
     }
     
@@ -238,7 +238,7 @@ contract Providers is Owner {
         if(_isUnlocked) {
             _author.confirmedTransaction(_idsTran);
         } else {
-            _author.submitTransaction(_id, _addr, 0, 6);
+            _author.submitTransaction(_id, _addr, 0, 6, msg.sender);
         }
         
     }

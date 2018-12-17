@@ -154,7 +154,7 @@ contract Medicines {
         private
     {
         Authorised _author =  Authorised(authorContractAddress);
-        _author.submitTransaction(_id, msg.sender, 0, _type); 
+        _author.submitTransaction(_id, msg.sender, 0, _type, msg.sender); 
     }
     
     function callAuthorSubmitAddMedicine(
@@ -167,7 +167,7 @@ contract Medicines {
         Authorised _author =  Authorised(authorContractAddress);
         authorContractAddress.transfer(_value);
          // send ether to author contract addres
-        _author.submitTransaction(_id, msg.sender, _value, _type); 
+        _author.submitTransaction(_id, msg.sender, _value, _type, msg.sender); 
     }
 
     function setDataBeforeAddMedicine( // for call addMedicine function
@@ -288,7 +288,7 @@ contract Medicines {
         if(_isBlock) {
             _author.confirmedTransaction(_idsTran);
         } else {
-            _author.submitTransaction(_id, _addr, 0, 5);
+            _author.submitTransaction(_id, _addr, 0, 5, msg.sender);
         }
     }
     
@@ -431,7 +431,7 @@ contract Medicines {
         if(_isUnlocked) {
             _author.confirmedTransaction(_idsTran);
         } else {
-            _author.submitTransaction(_id, _addr, 0, 7); // 7 is unlockMedicine   
+            _author.submitTransaction(_id, _addr, 0, 7, msg.sender); // 7 is unlockMedicine   
         }
     }
     
