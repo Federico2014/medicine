@@ -1,0 +1,25 @@
+{
+  "name": "vins-medicine-origin",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www",
+    "dev": "node ./bin/www"
+  },
+  "dependencies": {
+    "babel-preset-es2015-node6": "^0.4.0",
+    "babel-register": "^6.26.0",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "ejs": "^2.5.9",
+    "express": "~4.16.3",
+    "http-errors": "~1.6.2",
+    "ipfs-api": "^26.1.2",
+    "morgan": "~1.9.0",
+    "multer": "^1.4.1",
+    "nodemon": "^1.17.3",
+    "source-map-support": "^0.5.5",
+    "web3": "^1.0.0-beta.36"
+  }
+}

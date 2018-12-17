@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+        <%= title %>
+    </title>
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/datatables/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/admin/vendors/iconfonts/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/admin/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/admin/vendors/css/vendor.bundle.addons.css">
+    <link rel="stylesheet" href="/admin/css/style.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+</head>
+
+<body>
+
+    <div id="loader">
+        <img src="/images/loader.svg" alt="">
+    </div>
+
+    <div class="container-scroller animate-bottom" id="content-page">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+                <a class="navbar-brand brand-logo" href="/">
+                    <img src="images/LogoVinsoft.png" alt="logo" />
+                </a>
+            </div>
+
+        </nav>
+        <!-- partial -->
+
+        <div class="container-fluid page-body-wrapper">
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav" id="content-sidebar">
+                    <li class="nav-item nav-profile">
+                        <div class="nav-link">
+                            <div class="user-wrapper">
+                                <div class="profile-image">
+                                    <img class="imageNavProvider rounded-circle" src="/images/manager.png" alt="profile image">
+                                </div>
+                                <div class="text-wrapper">
+                                    <p class="nameNavProvider profile-name">Manager</p>
+                                    <div>
+                                        <small class="designation text-muted">Manager</small>
+                                        <span class="status-indicator online"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li id="link-waitingApprove" class="nav-item m-active">
+                        <a class="nav-link" onclick="toWaitingApprove()" href="javascript:void(0)">
+                            <i class="menu-icon mdi mdi-television"></i>
+                            <span class="menu-title">Waiting Approve</span>
+                        </a>
+                    </li>
+
+                    <li id="link-approved" class="nav-item">
+                        <a class="nav-link" onclick="toApproved()" href="javascript:void(0)">
+                            <i class="menu-icon mdi mdi-chart-line"></i>
+                            <span class="menu-title">Approved</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <div class="main-panel">
+                <div class="content-wrapper" id="content-wrapper">
+
+                    <div id="section-waitingApprove" class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Waiting Approve</h4>
+                                    <p class="card-description">
+
+                                    </p>
+                                    <div class="table-responsive">
+                                        <table id="tableWaitingApprove" class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>From</th>
+                                                    <th>Value</th>
+                                                    <th>Confirmed</th>
+                                                    <th>Reject</th>
+                                                    <th>Type</th>
+                                                    <th>Time</th>
+                                                    <th>Options</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id='tbodyTableWaitingApprove'>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div hidden id="section-approved" class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Approved</h4>
+                                    <p class="card-description"></p>
+                                    <div class="table-responsive">
+                                        <table id="tableApproved" class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>From</th>
+                                                    <th>Value</th>
+                                                    <th>Confirmed</th>
+                                                    <th>Reject</th>
+                                                    <th>Type</th>
+                                                    <th>Status</th>
+                                                    <th>Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyTableApproved">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade bd-example-modal-lg" id="modalViewWaitingApproveRegister" tabindex="-1" role="dialog"
+                    aria-labelledby="modalViewWaitingApproveRegisterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content modal-content-custom container">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalViewWaitingApproveRegisterTitle">Transaction Register</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group col" style="text-align: center;">
+                                            <img id="viewImageRegister" style="width:100%; width: 100%;" src="" alt="">
+                                            <p id="noteImageRegister" class="text-danger font-italic"></p>
+                                        </div>
+
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group col" id="contentRegister">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnRejectRegister">Reject</button>
+                                <button type="button" class="btn btn-primary" id="btnConfirmRegister">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade bd-example-modal-lg" id="modalViewWaitingApproveUpdate" tabindex="-1" role="dialog"
+                    aria-labelledby="modalViewWaitingApproveUpdateTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content modal-content-custom container">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalViewWaitingApproveUpdateTitle">Transaction
+                                    Update</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group col" style="text-align: center;">
+                                            <img id="viewPrewImageUpdate" style="width:100%; width: 100%;" src="" alt="">
+                                        </div>
+                                        <div class="form-group col" id="prewContentUpdate"></div>
+                                    </div>
+                                    <div class="col-1 mx-auto">
+                                        <p>=<b>></b></p>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group col" style="text-align: center">
+                                            <img id="viewLastImageUpdate" style="width:100%; width: 100%;" src="" alt="">
+                                            <p id="noteImageUpdate" class="text-danger font-italic"></p>
+                                        </div>
+                                        <div class="form-group col" id="lastContentUpdate"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnRejectUpdate">Reject</button>
+                                <button type="button" class="btn btn-primary" id="btnConfirmUpdate">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade  bd-example-modal-lg" id="modalViewWaitingApproveReport" tabindex="-1" role="dialog"
+                    aria-labelledby="modalViewWaitingApproveReportTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalViewWaitingApproveReportTitle">Transaction Report</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="form-group col" style="text-align: left;">
+                                            <img id="viewImageReport" style="width:100%; width: 50%;" src="" alt="">
+                                        </div>
+                                        <div class="form-group col" id="contentReport"></div>
+                                    </div>
+                                    <div class="col-9">
+                                        <h4 class="card-title">Report List</h4>
+                                        <p class="card-description">
+
+                                        </p>
+                                        <div class="table-responsive">
+                                            <table id="tableListReport" class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>From</th>
+                                                        <th>Email</th>
+                                                        <th>Street</th>
+                                                        <th>Phone</th>
+                                                        <th>Content</th>
+                                                        <th>Time</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id='tbodyTableListReport'>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnRejectReport">Reject</button>
+                                <button type="button" class="btn btn-primary" id="btnConfirmReport">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- import footer -->
+                <%- include('../layout/footer'); -%>
+            </div>
+        </div>
+    </div>
+    <div>
+
+        <script src="/admin/vendors/js/vendor.bundle.base.js"></script>
+        <script src="/admin/vendors/js/vendor.bundle.addons.js"></script>
+        <script src="admin/js/off-canvas.js"></script>
+        <script src="admin/js/misc.js"></script>
+        <script src="admin/js/dashboard.js"></script>
+
+        <script src="/jquery/jquery.min.js"></script>
+        <script src="/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/datatables/jquery.dataTables.min.js"></script>
+        <script src="/datatables/dataTables.bootstrap4.min.js"></script>
+
+        <script src="/js/app.js"></script>
+        <script src="/jsfrontend/web3.min.js"></script>
+        <script src="/jsfrontend/config.js"></script>
+        <script src="/jsfrontend/medicine.js"></script>
+
+
+
+        <script>
+            function showPage() {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("content-page").style.opacity = "1";
+            }
+
+            function showLoad() {
+                document.getElementById("loader").style.display = "block";
+                document.getElementById("content-page").style.opacity = "0.3";
+            }
+
+            function activeLink(id) {
+                var list = document.getElementById('content-wrapper').children;
+                for (let index = 0; index < list.length; index++) {
+                    list[index].hidden = true;
+                }
+                document.getElementById('section-' + id).hidden = false;
+                $("#content-sidebar").find('.nav-item').removeClass("m-active");
+                $('#link-' + id).addClass('m-active');
+                $('#tableLicenses').DataTable();
+            }
+
+            function toWaitingApprove() {
+                activeLink('waitingApprove');
+                // $('#tableMedicines').DataTable();
+            }
+
+            function toApproved() {
+                activeLink('approved');
+                // $('#tableTransactionHistory').DataTable();
+            }
+
+            function checkRegistered() {
+                checkIsManager().then((res) => {
+                    if (res == false)
+                        window.location.href = '/';
+                    else
+                        showPage();
+                })
+
+            }
+
+            async function getWattingApprove() {
+                account = await getAccount();
+                $.get('/api/listWattingApproves', { addressManager: account }, function (res) {
+                    console.log('listWattingApproves', res)
+                    var tbody = "";
+                    if (res.status == 200) {
+                        $.each(res.transactions, function (i, v) {
+                            var time = new Date(parseInt(v[6]) * 1000).toLocaleString();
+                            tbody +=
+                                `<tr>
+                        <td class="py-1"> ${v[0]} </td> 
+                        <td> ${v[1]} </td> 
+                        <td> ${v[2]} </td>
+                        <td> ${v[3]} </td>
+                        <td> ${v[4]} </td>
+                        <td> ${transactionTypes(v[5])} </td>
+                        <td> ${time}</td>
+                        <td>
+                            <button class="btn btn-success" onclick="viewTransaction(${v[5]},${v[0]},'${v[1]}',${v[8]})">View</button>
+                        </td>
+                    </tr>`
+                        })
+                    }
+                    $("#tbodyTableWaitingApprove").html(tbody);
+                    $("#tableWaitingApprove").DataTable().reload;
+                })
+            }
+
+            async function getConfirmed() {
+                account = await getAccount();
+                $.get('/api/listConfirmed', { address: account }, function (res) {
+                    console.log('listConfirmed', res)
+                    var tbody = "";
+                    if (res.status == 200) {
+                        $.each(res.transactions, function (i, v) {
+                            var time = new Date(parseInt(v[6]) * 1000).toLocaleString();
+                            tbody +=
+                                `<tr>
+                        <td class="py-1"> ${v[0]} </td> 
+                        <td> ${v[1]} </td> 
+                        <td> ${v[2]} </td>
+                        <td> ${v[3]} </td>
+                        <td> ${v[4]} </td>
+                        <td> ${transactionTypes(v[5])} </td>
+                        <td> ${v[7] == true ? 'Excuted' : 'Pending...'}</td>
+                        <td> ${time}</td>
+                    </tr>`
+                        })
+                    }
+                    $("#tbodyTableApproved").html(tbody);
+                    $("#tableApproved").DataTable().reload;
+                })
+            }
+
+            function viewTransaction(type, id, from, index) {
+                switch (type) {
+                    case 0:
+                        viewTransactionRegisterProvider(id, from, index);
+                        break;
+                    case 1:
+                        viewTransactionUpdateProvider(id, from, index);
+                        break;
+                    case 2:
+                        // convertType = "Block Provider"
+                        break;
+                    case 3:
+                        viewTransactionRegisterMedicine(id, from, index);
+                        break;
+                    case 4:
+                        viewTransactionUpdateMedicine(id, from, index);
+                        break;
+                    case 5:
+                        viewTransactionBlockMedicine(id, from, index);
+                        break;
+                    case 7:
+                        viewTransactionBlockMedicine(id, from, index);
+                        break;
+                    case 8:
+                        viewTransactionReport(id, from, index);
+                        break;
+                    default:
+                        // convertType = "NAN"
+                        break;
+                }
+            }
+
+            async function viewTransactionRegisterProvider(id, from, index) {
+                await $.get("api/providerByAddress", { address: from }, function (res) {
+                    console.log('providerByAddress', res.provider)
+                    provider = res.provider;
+                    $('#viewImageRegister').attr('src', 'https://ipfs.io/ipfs/' + provider[5])
+                    $('#contentRegister').html(`
+                        <p><b>Name:  </b>${provider[2]} (${provider[1]})</p>
+                        <p><b>Street:</b> ${provider[3]}</p>
+                        <p><b>Phone: </b>${provider[4]}</p>
+                    `)
+                })
+
+                $('#btnConfirmRegister').attr("onClick", 'confirmTransaction(' + index + '); $("#modalViewWaitingApproveRegister").modal("hide")')
+                $('#btnRejectRegister').attr("onClick", 'rejectTransaction(' + index + '); $("#modalViewWaitingApproveRegister").modal("hide")')
+
+                checkImgNotExist(web3js.utils.toHex(provider[5]), provider[1]).then(resCheck => {
+                    if (resCheck == false) {
+                        $('#noteImageRegister').text('Image are already registered')
+                        $('#btnConfirmRegister').prop('disabled', true);
+                    } else {
+                        $('#noteImageRegister').text('')
+                        $('#btnConfirmRegister').prop('disabled', false);
+                    }
+                })
+
+                $('#modalViewWaitingApproveRegister').modal('show')
+            }
+
+            async function viewTransactionRegisterMedicine(id, from, index) {
+                await $.get("api/medicineByCode", { code: id }, function (res) {
+                    console.log('medicineByCode', res)
+                    medicine = res.medicine;
+                    provider = res.provider;
+                    $('#viewImageRegister').attr('src', 'https://ipfs.io/ipfs/' + medicine[0][7])
+                    $('#contentRegister').html(`
+                    <div>
+                        <p><b>Name:  </b>${medicine[0][1]} (${medicine[0][0]})</p>
+                        <p><b>Ingredient:</b> ${medicine[0][2]}</p>
+                        <p><b>Benefit: </b>${medicine[0][3]}</p>
+                        <p><b>By: </b>${medicine[0][4]}</p>
+                        <p><b>Detail: </b>${medicine[0][5]}</p>
+                        <p><b>Price: </b>${medicine[0][6]}</p>
+                        <p><b>Digital ID: </b>${medicine[0][8]}</p>
+                        <p><b>Status: </b>${medicine[0][9]}</p>
+                    </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <p><b>By Provider: </b>${provider[2]} (${provider[1]})</p>
+                                <p><b>Street: </b>${provider[3]}</p> 
+                                <p><b>Phone: </b>${provider[4]}</p>
+                            </div>
+                            <div class="form-group col-4" style="text-align: center;">
+                                <img style="width:100%; width: 100%;" src="https://ipfs.io/ipfs/${provider[5]}"  alt="">
+                            </div>
+                        </div>
+                    </div>
+                    `)
+                })
+
+                $('#btnConfirmRegister').attr("onClick", 'confirmTransaction(' + index + '); $("#modalViewWaitingApproveRegister").modal("hide")')
+                $('#btnRejectRegister').attr("onClick", 'rejectTransaction(' + index + '); $("#modalViewWaitingApproveRegister").modal("hide")')
+
+                checkImgNotExist(web3js.utils.toHex(medicine[0][7]), medicine[0][0]).then(resCheck => {
+                    if (resCheck == false) {
+                        $('#noteImageRegister').text('Image are already registered')
+                        $('#btnConfirmRegister').prop('disabled', true);
+                    } else {
+                        $('#noteImageRegister').text('')
+                        $('#btnConfirmRegister').prop('disabled', false);
+                    }
+                })
+
+                $('#modalViewWaitingApproveRegister').modal('show')
+            }
+
+            async function viewTransactionUpdateProvider(id, from, index) {
+                await $.get("api/providerByAddress", { address: from.toString() }, function (res) {
+                    console.log('providerByAddress', res)
+                    data = res.provider;
+                    $('#viewPrewImageUpdate').attr('src', 'https://ipfs.io/ipfs/' + data[5])
+                    $('#prewContentUpdate').html(`
+                        <p><b>ID</b>: ${data[1]}</p>
+                        <p><b>Name:  </b>${data[2]}</p>
+                        <p><b>Street:</b> ${data[3]}</p>
+                        <p><b>Phone: </b>${data[4]}</p>
+                    `)
+                })
+
+                await $.get("api/providerUpdatingByAddress", { address: from.toString() }, function (res) {
+                    console.log('providerUpdatingByAddress', res)
+                    data = res.provider;
+                    $('#viewLastImageUpdate').attr('src', 'https://ipfs.io/ipfs/' + data[5])
+                    $('#lastContentUpdate').html(`
+                        <p><b>ID</b>: ${data[1]}</p>
+                        <p><b>Name:  </b>${data[2]}</p>
+                        <p><b>Street:</b> ${data[3]}</p>
+                        <p><b>Phone: </b>${data[4]}</p>
+                    `)
+                })
+                $('#btnConfirmUpdate').attr("onClick", 'confirmTransaction(' + index + '); $("#modalViewWaitingApproveUpdate").modal("hide")')
+                $('#btnRejectUpdate').attr("onClick", 'rejectTransaction(' + index + '); $("#modalViewWaitingApproveUpdate").modal("hide")')
+
+                checkImgNotExist(web3js.utils.toHex(data[5]), data[1]).then(resCheck => {
+                    if (resCheck == false) {
+                        $('#noteImageUpdate').text('Image are already registered')
+                        $('#btnConfirmUpdate').prop('disabled', true);
+                    } else {
+                        $('#noteImageUpdate').text('')
+                        $('#btnConfirmUpdate').prop('disabled', false);
+                    }
+                })
+
+                $('#modalViewWaitingApproveUpdate').modal('show')
+            }
+
+            async function viewTransactionUpdateMedicine(id, from, index) {
+                digital = 0;
+                await $.get("api/medicineByCode", { code: id }, function (res) {
+                    console.log('medicineByCode', res)
+                    medicine = res.medicine;
+                    provider = res.provider;
+                    digital = medicine[0][8]
+                    $('#viewPrewImageUpdate').attr('src', 'https://ipfs.io/ipfs/' + medicine[0][7])
+                    $('#prewContentUpdate').html(`
+                        <p><b>Name:  </b>${medicine[0][1]} (${medicine[0][0]})</p>
+                        <p><b>Ingredient:</b> ${medicine[0][2]}</p>
+                        <p><b>Benefit: </b>${medicine[0][3]}</p>
+                        <p><b>By: </b>${medicine[0][4]}</p>
+                        <p><b>Detail: </b>${medicine[0][5]}</p>
+                        <p><b>Price: </b>${medicine[0][6]}</p>
+                        <p><b>Digital ID: </b>${medicine[0][8]}</p>
+                        <p><b>Status: </b>${medicine[0][9]}</p>
+                        <p><b>By Provider: </b>${provider[2]} (${provider[1]})</p>
+                        <p><b>Street: </b>${provider[3]}</p> 
+                        <p><b>Phone: </b>${provider[4]}</p>
+                    `)
+                })
+
+                await $.get("api/getMedicinesUpdadingByProvider", { address: from, id: id }, function (res) {
+                    console.log('getMedicinesUpdadingByProvider', res)
+                    medicine = res.medicine;
+                    provider = res.provider;
+                    $('#viewLastImageUpdate').attr('src', 'https://ipfs.io/ipfs/' + web3js.utils.hexToString(medicine[7]));
+                    $('#lastContentUpdate').html(`
+                        <p><b>Name:  </b>${medicine[1]} (${medicine[0]})</p>
+                        <p><b>Ingredient:</b> ${medicine[2]}</p>
+                        <p><b>Benefit: </b>${medicine[3]}</p>
+                        <p><b>By: </b>${medicine[4]}</p>
+                        <p><b>Detail: </b>${medicine[5]}</p>
+                        <p><b>Price: </b>${medicine[6]}</p>
+                        <p><b>Digital ID: </b>${digital}</p>
+                        <p><b>Status: </b>${medicine[9]}</p>
+                        <p><b>By Provider: </b>${provider[2]} (${provider[1]})</p>
+                        <p><b>Street: </b>${provider[3]}</p> 
+                        <p><b>Phone: </b>${provider[4]}</p>
+                    `)
+                })
+                $('#btnConfirmUpdate').attr("onClick", 'confirmTransaction(' + index + '); $("#modalViewWaitingApproveUpdate").modal("hide")')
+                $('#btnRejectUpdate').attr("onClick", 'rejectTransaction(' + index + '); $("#modalViewWaitingApproveUpdate").modal("hide")')
+                checkImgNotExist(web3js.utils.toHex(medicine[7]), medicine[0]).then(resCheck => {
+                    if (resCheck == false) {
+                        $('#noteImageUpdate').text('Image are already registered')
+                        $('#btnConfirmUpdate').prop('disabled', true);
+                    } else {
+                        $('#noteImageUpdate').text('')
+                        $('#btnConfirmUpdate').prop('disabled', false);
+                    }
+                })
+                $('#modalViewWaitingApproveUpdate').modal('show')
+            }
+
+            async function viewTransactionBlockMedicine(id, from, index) {
+                await $.get("api/medicineByCode", { code: id }, function (res) {
+                    console.log('medicineByCode', res)
+                    medicine = res.medicine;
+                    provider = res.provider;
+                    $('#viewImageRegister').attr('src', 'https://ipfs.io/ipfs/' + medicine[0][7])
+                    $('#contentRegister').html(`
+                    <div>
+                        <p><b>Name:  </b>${medicine[0][1]} (${medicine[0][0]})</p>
+                        <p><b>Ingredient:</b> ${medicine[0][2]}</p>
+                        <p><b>Benefit: </b>${medicine[0][3]}</p>
+                        <p><b>By: </b>${medicine[0][4]}</p>
+                        <p><b>Detail: </b>${medicine[0][5]}</p>
+                        <p><b>Price: </b>${medicine[0][6]}</p>
+                        <p><b>Digital ID: </b>${medicine[0][8]}</p>
+                        <p><b>Status: </b>${medicine[0][9]}</p>
+                    </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <p><b>By Provider: </b>${provider[2]} (${provider[1]})</p>
+                                <p><b>Street: </b>${provider[3]}</p> 
+                                <p><b>Phone: </b>${provider[4]}</p>
+                            </div>
+                            <div class="form-group col-4" style="text-align: center;">
+                                <img style="width:100%; width: 100%;" src="https://ipfs.io/ipfs/${provider[5]}"  alt="">
+                            </div>
+                        </div>
+                    </div>
+                    `)
+                })
+
+                $('#btnConfirmRegister').attr("onClick", 'confirmTransaction(' + index + '); $("#modalViewWaitingApproveRegister").modal("hide")')
+                $('#btnRejectRegister').attr("onClick", 'rejectTransaction(' + index + '); $("#modalViewWaitingApproveRegister").modal("hide")')
+                $('#modalViewWaitingApproveRegister').modal('show')
+            }
+
+
+            async function viewTransactionReport(id, from, index) {
+                address = await getAccount();
+                await $.get("api/medicineByCode", { code: id }, function (res) {
+                    console.log('medicineByCode', res)
+                    medicine = res.medicine;
+                    provider = res.provider;
+                    $('#viewImageReport').attr('src', 'https://ipfs.io/ipfs/' + medicine[0][7])
+                    $('#contentReport').html(`
+                        <p style="text-align: justify;"><b>Name:  </b>${medicine[0][1]} (${medicine[0][0]})</p>
+                        <p style="text-align: justify;"><b>Ingredient:</b> ${medicine[0][2]}</p>
+                        <p style="text-align: justify;"><b>Benefit: </b>${medicine[0][3]}</p>
+                        <p style="text-align: justify;"><b>By: </b>${medicine[0][4]}</p>
+                        <p style="text-align: justify;"><b>Detail: </b>${medicine[0][5]}</p>
+                        <p style="text-align: justify;"><b>Price: </b>${medicine[0][6]}</p>
+                        <p style="text-align: justify;"><b>Digital ID: </b>${medicine[0][8]}</p>
+                        <p style="text-align: justify;"><b>Status: </b>${medicine[0][9]}</p>
+                        <p style="text-align: justify;"><b>By Provider: </b>${provider[2]} (${provider[1]})</p>
+                        <p style="text-align: justify;"><b>Street: </b>${provider[3]}</p> 
+                        <p style="text-align: justify;"><b>Phone: </b>${provider[4]}</p>
+                    `)
+                })
+
+                await $.get("api/listReport", { id: id, address: address }, function (res) {
+                    console.log('listReport', res)
+                    if (res.status == 200) {
+                        tbody = ``;
+                        $.each(res.list, function (i, v) {
+                            var time = new Date(parseInt(v[8]) * 1000);
+                            tbody +=
+                                `<tr>
+                                    <td class="py-1"> ${v[2]} </td> 
+                                    <td> ${v[3]} </td> 
+                                    <td> ${v[4]} </td>
+                                    <td> ${v[5]} </td>
+                                    <td> ${v[6]} </td>
+                                    <td> ${time.toLocaleString()}</td>
+                                </tr>`
+                        })
+                        $("#tbodyTableListReport").html(tbody);
+                    }
+
+                })
+
+                $('#tableListReport').DataTable().reload;
+                $('#btnConfirmReport').attr("onClick", 'confirmTransaction(' + index + '); $("#modalViewWaitingApproveReport").modal("hide")')
+                $('#btnRejectReport').attr("onClick", 'rejectTransaction(' + index + '); $("#modalViewWaitingApproveReport").modal("hide")')
+                
+                $('#modalViewWaitingApproveReport').modal('show')
+            }
+
+            function confirmTransaction(idTransaction) {
+                confirmedTransaction(idTransaction).then(res => {
+                    location.reload();
+                })
+            }
+
+            function rejectTransaction(idTransaction) {
+                rejectedTransaction(idTransaction).then(res => {
+                    location.reload();
+                })
+            }
+
+            function findMedicine(id) {
+                toMedicines();
+                table = $('#tableMedicines').DataTable();
+                table.search(id);
+            }
+
+            function findDigitalCertificate(id) {
+                toDigitalCertificates();
+                table = $('#tableDigitalCertificates').DataTable();
+                table.search(id);
+            }
+
+            $(document).ready(function () {
+                showLoad();
+
+                checkRegistered();
+
+                setInterval(() => {
+                    checkRegistered();
+                }, 1000);
+
+                $('#modalRegisterProvider').on('hidden.bs.modal', function () {
+                    window.location.href = "/";
+                })
+
+                getWattingApprove();
+                getConfirmed();
+                showPage();
+            });
+        </script>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+        <%= title %>
+    </title>
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/datatables/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/admin/vendors/iconfonts/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/admin/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/admin/vendors/css/vendor.bundle.addons.css">
+    <link rel="stylesheet" href="/admin/css/style.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+</head>
+
+<body>
+
+    <div id="loader">
+        <img src="/images/loader.svg" alt="">
+    </div>
+
+    <div class="container-scroller animate-bottom" id="content-page">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+                <a class="navbar-brand brand-logo" href="/">
+                    <img src="images/LogoVinsoft.png" alt="logo" />
+                </a>
+            </div>
+            <!-- <div class="navbar-menu-wrapper d-flex align-items-center">
+                <ul class="navbar-nav navbar-nav-right">
+                    <li class="nav-item dropdown d-none d-xl-inline-block">
+                        <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown"
+                            aria-expanded="false">
+                            <span class="nameNavProvider profile-text">Hello, Shino kun !</span>
+                            <img class="imageNavProvider img-xs rounded-circle" src="images/medicines/shino.jpeg" alt="Profile image">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                            <a class="dropdown-item mt-2" href="/">Back Home</a>
+                        </div>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div> -->
+        </nav>
+        <!-- partial -->
+
+        <div class="container-fluid page-body-wrapper">
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav" id="content-sidebar">
+                    <li class="nav-item nav-profile">
+                        <div class="nav-link">
+                            <div class="user-wrapper btn" data-toggle="modal" id="nav-provider" data-target="#modalEditProvider" onclick="getEditProvider()">
+                                <div class="profile-image">
+                                    <img class="imageNavProvider rounded-circle" src="images/medicines/shino.jpeg" alt="profile image">
+                                </div>
+                                <div class="text-wrapper">
+                                    <p class="nameNavProvider profile-name">Name Provider</p>
+                                    <div>
+                                        <small class="designation text-muted">Provider</small>
+                                        <span class="status-indicator online"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success btn-block linkAddMedicine" data-toggle="modal" data-target="#modalRegisterMedicine">New
+                                Medicine
+                                <i class="mdi mdi-plus"></i>
+                            </button>
+
+                        </div>
+                    </li>
+                    <li id="link-medicines" class="nav-item m-active">
+                        <a class="nav-link" onclick="toMedicines()" href="javascript:void(0)">
+                            <i class="menu-icon mdi mdi-television"></i>
+                            <span class="menu-title">Medicines</span>
+                        </a>
+                    </li>
+
+                    <li id="link-digitalCertificates" class="nav-item">
+                        <a class="nav-link" onclick="toDigitalCertificates()" href="javascript:void(0)">
+                            <i class="menu-icon mdi mdi-chart-line"></i>
+                            <span class="menu-title">Digital Certificates</span>
+                        </a>
+                    </li>
+
+                    <li id="link-transactionHistory" class="nav-item">
+                        <a class="nav-link" onclick="toTransactionHistory()" href="javascript:void(0)">
+                            <i class="menu-icon mdi mdi-chart-line"></i>
+                            <span class="menu-title">Transaction History</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <div class="main-panel">
+                <div class="content-wrapper" id="content-wrapper">
+
+                    <div id="section-medicines" class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Medicines <span class="linkAddMedicine"><a href="javascript:void(0)"><img
+                                                    data-toggle="modal" data-target="#modalRegisterMedicine" src="/images/add.png"
+                                                    alt=""></a></span></h4>
+                                    <p class="card-description">
+
+                                    </p>
+                                    <div class="table-responsive">
+                                        <table id="tableMedicines" class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Image</th>
+                                                    <th>ID</th>
+                                                    <th>Name</th>
+                                                    <th>Ingredient</th>
+                                                    <th>Benefit</th>
+                                                    <th>By</th>
+                                                    <th>Detail</th>
+                                                    <th>Price</th>
+                                                    <th>Digital ID</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id='tbodyTableMedicines'>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div hidden id="section-digitalCertificates" class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Digital Certificates</h4>
+                                    <p class="card-description"></p>
+                                    <div class="table-responsive">
+                                        <table id="tableDigitalCertificates" class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Content</th>
+                                                    <th>Time</th>
+                                                    <th>By</th>
+                                                    <th>Address</th>
+                                                    <th>Medicine ID</th>
+                                                    <th>Active</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyDigitalCertificates">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div hidden id="section-transactionHistory" class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Transaction History</h4>
+                                    <p class="card-description"></p>
+                                    <div class="table-responsive">
+                                        <table id="tableTransactionHistory" class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>From</th>
+                                                    <th>Value</th>
+                                                    <th>Confirmed</th>
+                                                    <th>Reject</th>
+                                                    <th>Type</th>
+                                                    <th>Time</th>
+                                                    <th>Options</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyTransactionHistory">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- import footer -->
+                <%- include('../layout/footer'); -%>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <!-- Modal register provider -->
+        <div class="modal fade" id="modalRegisterProvider" tabindex="-1" role="dialog" aria-labelledby="modalRegisterProviderTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalRegisterProviderTitle">Form Register Provider</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formRegisterProvider" action="#">
+                            <div class="form-group">
+                                <input id="nameRegisterProvider" type="text" class="form-control" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <input id="streetRegisterProvider" type="text" class="form-control" placeholder="Street">
+                            </div>
+                            <div class="form-group">
+                                <input id="phoneRegisterProvider" type="number" class="form-control" placeholder="Phone">
+                            </div>
+                            <div class="form-group">
+                                <input id="imageRegisterProvider" type="file" class="form-control" placeholder="Upload Image">
+                            </div>
+                            <div class="form-group message hidden"></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/" class="text-black text-small">Back Home</a>
+                        <button type="button" class="btn btn-primary register" onclick="registerProvider();">Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal register MEDICINE -->
+        <div class="modal fade" id="modalRegisterMedicine" tabindex="-1" role="dialog" aria-labelledby="modalRegisterMedicineTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalRegisterMedicineTitle">Form Register Medicine</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formRegisterMedicine" action="#">
+                            <div class="form-group">
+                                <input id="nameRegisterMedicine" type="text" class="form-control" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <textarea id="ingredientRegisterMedicine" type="text" rows="2" class="form-control"
+                                    placeholder="Ingredient"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="benefitRegisterMedicine" type="text" rows="2" class="form-control"
+                                    placeholder="Benefit"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input id="byRegisterMedicine" type="text" class="form-control" placeholder="By">
+                            </div>
+                            <div class="form-group">
+                                <textarea id="detailRegisterMedicine" type="text" rows="4" class="form-control"
+                                    placeholder="Detail"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input id="priceRegisterMedicine" type="number" class="form-control" placeholder="Price">
+                            </div>
+                            <div class="form-group">
+                                <input id="imageRegisterMedicine" type="file" class="form-control" placeholder="Image">
+                            </div>
+                            <div class="form-group message hidden"></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="registerMedicine();">Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal edit MEDICINE -->
+        <div class="modal fade" id="modalEditMedicine" tabindex="-1" role="dialog" aria-labelledby="modalEditMedicineTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEditMedicineTitle">Form Edit Medicine</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formEditMedicine" action="#">
+                            <div class="form-group">
+                                <input id="idEditMedicine" type="text" class="form-control" disabled placeholder="ID">
+                            </div>
+                            <div class="form-group">
+                                <input id="nameEditMedicine" type="text" class="form-control" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <textarea id="ingredientEditMedicine" type="text" rows="2" class="form-control"
+                                    placeholder="Ingredient"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="benefitEditMedicine" type="text" rows="2" class="form-control"
+                                    placeholder="Benefit"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input id="byEditMedicine" type="text" class="form-control" placeholder="By">
+                            </div>
+                            <div class="form-group">
+                                <textarea id="detailEditMedicine" type="text" rows="3" class="form-control" placeholder="Detail"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input id="priceEditMedicine" type="number" class="form-control" placeholder="Price">
+                            </div>
+                            <div class="form-group" id="sectionImageEditMedicine" style="text-align: center">
+                                <img id="viewImageEditMedicine" style="max-width:50%; max-width: 50%;" src="" alt="">
+                            </div>
+                            <div class="form-group">
+                                <input id="imageEditMedicine" type="file" class="form-control" placeholder="Change Image">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary register" onclick="postEditMedicine();$('#modalEditMedicine').modal('hide');">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal edit Provider -->
+        <div class="modal fade" id="modalEditProvider" tabindex="-1" role="dialog" aria-labelledby="modalEditProviderTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEditProviderTitle">Form Edit Provider</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formEditProvider" action="#">
+                            <div class="form-group">
+                                <input id="idEditProvider" type="text" class="form-control" disabled placeholder="ID">
+                            </div>
+                            <div class="form-group">
+                                <input id="nameEditProvider" type="text" class="form-control" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <input id="streetEditProvider" type="text" class="form-control" placeholder="Street">
+                            </div>
+                            <div class="form-group">
+                                <input id="phoneEditProvider" type="text" class="form-control" placeholder="Phone">
+                            </div>
+                            <div class="form-group" id="sectionImageEditProvider" style="text-align: center">
+                                <img id="viewImageEditProvider" style="max-width:50%; max-width: 50%;" src="" alt="">
+                            </div>
+                            <div class="form-group">
+                                <input id="imageEditProvider" type="file" class="form-control" placeholder="Change Image">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary register" onclick="postEditProvider();">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="show-status hidden box-msg">
+            <div class="box-close">
+                <i class="fa fa-times-circle btn-close"></i>
+            </div>
+            <h5>title</h5>
+            <p><a href="https://ropsten.etherscan.io/tx/" target="_blank"></a></p>
+        </div>
+
+        <div class="show-error hidden box-msg">
+            <div class="box-close">
+                <i class="fa fa-times-circle btn-close"></i>
+            </div>
+            <h5>title</h5>
+            <p>content</p>
+        </div>
+
+        <!-- Modal info Digital -->
+        <%- include('../layout/viewDigitalCertificate'); -%>
+    </div>
+
+    <div>
+
+        <script src="/admin/vendors/js/vendor.bundle.base.js"></script>
+        <script src="/admin/vendors/js/vendor.bundle.addons.js"></script>
+        <script src="admin/js/off-canvas.js"></script>
+        <script src="admin/js/misc.js"></script>
+        <script src="admin/js/dashboard.js"></script>
+
+        <script src="/jquery/jquery.min.js"></script>
+        <script src="/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/datatables/jquery.dataTables.min.js"></script>
+        <script src="/datatables/dataTables.bootstrap4.min.js"></script>
+
+        <script src="/js/app.js"></script>
+        <script src="/jsfrontend/web3.min.js"></script>
+        <script src="/jsfrontend/config.js"></script>
+        <script src="/jsfrontend/medicine.js"></script>
+
+
+
+        <script>
+            function showPage() {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("content-page").style.opacity = "1";
+            }
+
+            function showLoad() {
+                document.getElementById("loader").style.display = "block";
+                document.getElementById("content-page").style.opacity = "0.3";
+            }
+
+            function activeLink(id) {
+                var list = document.getElementById('content-wrapper').children;
+                for (let index = 0; index < list.length; index++) {
+                    list[index].hidden = true;
+                }
+                document.getElementById('section-' + id).hidden = false;
+                $("#content-sidebar").find('.nav-item').removeClass("m-active");
+                $('#link-' + id).addClass('m-active');
+                $('#tableLicenses').DataTable();
+            }
+
+            function toDigitalCertificates() {
+                activeLink('digitalCertificates');
+                // $('#tableDigitalCertificatess').DataTable();
+            }
+
+            function toMedicines() {
+                activeLink('medicines');
+                // $('#tableMedicines').DataTable();
+            }
+
+            function toTransactionHistory() {
+                activeLink('transactionHistory');
+                // $('#tableTransactionHistory').DataTable();
+            }
+
+            function checkRegistered() {
+                checkIsProvider().then((res) => {
+                    if (res[0].startsWith("0x0000")) {
+                        $('#modalRegisterProvider').modal('show');
+                        document.getElementById('content-page').hidden = true;
+                        showPage();
+                    } else {
+                        if(res[6]==false){
+                            $('#nav-provider').attr('onclick','javascript:void(0)');
+                            $('#nav-provider').attr('data-target','');
+                        }else{
+                            $('#nav-provider').attr('onclick','getEditProvider()');
+                            $('#nav-provider').attr('data-target','#modalEditProvider');
+                        }
+                        $('#modalRegisterProvider').modal('hide');
+                        $('.imageNavProvider').attr('src', 'https://ipfs.io/ipfs/' + web3js.utils.hexToString(
+                            res[5]));
+                        $('.nameNavProvider').text(res[2]);
+                        if (accountDefault != res[0]) {
+                            getMedicines();
+                            getDigital();
+                            getHistoryTransaction();
+                            accountDefault = res[0];
+                        }
+                        showPage();
+                    }
+                    if (res[6] == false) {
+                        list = document.getElementsByClassName('linkAddMedicine');
+                        for (const item of list) {
+                            item.hidden = true
+                        }
+                    } else {
+                        list = document.getElementsByClassName('linkAddMedicine');
+                        for (const item of list) {
+                            item.hidden = false
+                        }
+                    }
+                })
+            }
+
+            async function getMedicines() {
+                var provider = await getAccount();
+                $.get("/api/allMedicines", {
+                    provider: provider
+                }, res => {
+                    if (res.status == 200) {
+                        data = res.medicines;
+                        console.log('allMedicines', data)
+                        tbody = '';
+                        for (let i = 0; i < data.length; i++) {
+                            link = `<a href="javascript:void(0)" onclick="getViewDigitalCertificate('${data[i][0]}')">${data[i][8]}</a>`
+                            tbody +=
+                                `<tr>
+                                    <td class='py-1'><img src="https://ipfs.io/ipfs/${data[i][7]}" alt=""></td>
+                                    <td> ${data[i][0]} </td>
+                                    <td> ${data[i][1]} </td>
+                                    <td class="zoom-in" data-toggle="tooltip" data-placement="bottom" title="${data[i][2]}"> ${data[i][2].substring(0, data[i][2].indexOf(' ', 12))} ...  </td>
+                                    <td class="zoom-in" data-toggle="tooltip" data-placement="bottom" title="${data[i][3]}"> ${data[i][3].substring(0, data[i][3].indexOf(' ', 12))} ... </td>
+                                    <td> ${data[i][4]} </td>
+                                    <td class="zoom-in" data-toggle="tooltip" data-placement="bottom" title="${data[i][5]}"> ${data[i][5].substring(0, data[i][5].indexOf(' ', 12))} ... </td>
+                                    <td> ${data[i][6]} </td>
+                                    <td> ${data[i][8] != 0 ? link : "Not Censorred"}</td>
+                                    <td> ${data[i][9]} </td>   
+                                    <td>
+                                        <button ${data[i][9] == false ? 'hidden' : ''} onclick='getEditMedicine(${data[i][0]}, "${data[i][1]}","${String(data[i][2])}", "${String(data[i][3])}", "${data[i][4]}", "${String(data[i][5])}", ${data[i][6]},"https://ipfs.io/ipfs/${data[i][7]}")' class="btn btn-warning" data-toggle="modal" data-target="#modalEditMedicine">Edit</button>
+                                    </td>
+                                </tr>`;
+                        }
+                        $("#tbodyTableMedicines").html(tbody);
+                        $('#tableMedicines').DataTable().reload;
+                    }
+                })
+            }
+
+            async function getDigital() {
+                var provider = await getAccount();
+                $.get("/api/getDigitalCertificateByAddress", {
+                    providerAddress: provider
+                }, res => {
+                    if (res.status == 200) {
+                        data = res.digital;
+                        console.log('getDigitalCertificateByAddress', data)
+                        tbody = '';
+                        for (let i = 0; i < data.length; i++) {
+                            var time = new Date(parseInt(data[i][2]) * 1000).toLocaleString();
+                            tbody +=
+                                `<tr>
+                                    <td class='py-1'><a href="javascript:void(0)" onclick="getViewDigitalCertificate('${data[i][5]}')">${data[i][0]}</a></td>
+                                    <td> ${data[i][1]} </td>
+                                    <td> ${time} </td>
+                                    <td> ${data[i][3]} </td>
+                                    <td> ${data[i][4]} </td>    
+                                    <td> <a href="javascript:void(0)" class='text-primary' onclick="findMedicine('${data[i][5]}')"> ${data[i][5]}</a> </td>
+                                    <td> ${data[i][6]} </td>
+                                </tr>`;
+                        }
+                        $("#tbodyDigitalCertificates").html(tbody);
+                        $('#tableDigitalCertificates').DataTable().reload;
+                    }
+                })
+            }
+
+            async function getHistoryTransaction(addressProvider) {
+                var provider = await getAccount();
+                $.get("/api/allTransactionByAddress", {
+                    providerAddress: provider
+                }, res => {
+                    if (res.status == 200) {
+                        data = res.listInfo;
+                        console.log('allTransactionByAddress', data)
+                        tbody = '';
+                        for (let i = 0; i < data.length; i++) {
+                            var time = new Date(parseInt(data[i][6]) * 1000);
+                            tbody +=
+                                `<tr>
+                                    <td class='py-1'> ${data[i][0]} </td>
+                                    <td> ${data[i][1]} </td>
+                                    <td> ${data[i][2]} </td>
+                                    <td> ${data[i][3]} </td>
+                                    <td> ${data[i][4]} </td>    
+                                    <td> ${transactionTypes(data[i][5])} </td>
+                                    <td> ${time.toLocaleString()} </td>
+                                    <td> ${((data[i][2] >= 10) && (data[i][3] <= 0) && (data[i][4] <= 0) && (time.setSeconds(time.getSeconds() + 1) <= Date.now())) ? "<button class='btn btn-success' onclick='postRefundETH(" + data[i][0] + ")'>Refund</button>" : ''} </td>
+                                </tr>`;
+                        }
+                        $("#tbodyTransactionHistory").html(tbody);
+                        $('#tableTransactionHistory').DataTable().reload;
+
+                    }
+                })
+            }
+
+            function findMedicine(id) {
+                toMedicines();
+                table = $('#tableMedicines').DataTable();
+                table.search(id).draw();
+            }
+
+            // function findDigitalCertificate(id) {
+            //     toDigitalCertificates();
+            //     table = $('#tableDigitalCertificates').DataTable();
+            //     table.search(id).draw();
+            // }
+
+            async function infoImage(id) {
+                var formData = new FormData();
+                formData.append('image', $("#" + id)[0].files[0]);
+                return await $.ajax({
+                    url: 'api/uploadImage',
+                    data: formData,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                });
+            }
+
+            async function registerProvider() {
+                // markLoading($(".modal-footer"));
+                var account = await getAccount();
+                var flag = false;
+                var _name = $("#nameRegisterProvider").val();
+                var _street = $("#streetRegisterProvider").val();
+                var _phone = $("#phoneRegisterProvider").val();
+                var _file = $("#imageRegisterProvider")[0].files.length;
+                if(
+                    _name.length == 0 ||
+                    _street.length == 0 ||
+                    _phone.length == 0 ||
+                    _file == 0
+                    )
+                {
+                    flag = true
+
+                }
+                if(flag == false) {
+                    infoImage("imageRegisterProvider").then(res => {
+                    if (res.status == 200) {
+                        console.log(res)
+                        imgByte = res.byte32
+                        signImage(imgByte, account).then(resSign => {
+                            imgNotExist(imgByte, account, 0).then(resCheck => {
+                                if (resCheck == true) {
+                                    signUpProvider($('#nameRegisterProvider').val(), $('#streetRegisterProvider').val(), $(
+                                        '#phoneRegisterProvider').val(), imgByte, resSign.msgHash, resSign.signMSG).then(() => {
+                                            location.reload();
+                                            $('#modalRegisterProvider').modal('hide');
+                                        });
+                                } else {
+                                    showError("Error", "Image are already registered");
+                                }
+                            });
+                        });
+                    } else {
+                        showError("Error", 'Upload image fail.');
+                    }
+                    })
+                } else {
+                    showError("Error", "Please fill full data");
+                }
+
+
+
+
+            }
+
+            async function signImage(imgByte, account) {
+
+                const msgHash = web3js.eth.accounts.hashMessage(imgByte);
+                var signMSG = await web3js.eth.personal.sign(msgHash, account, function (err, res) {
+                    return res;
+                })
+                return {
+                    msgHash: msgHash,
+                    signMSG: signMSG
+                };
+            }
+
+            async function registerMedicine() {
+                // markLoading($(".modal-footer"));
+                var flag = false;
+                var _name = $("#nameRegisterMedicine").val();
+                var _ingredient = $("#ingredientRegisterMedicine").val();
+                var _benefit = $("#benefitRegisterMedicine").val();
+                var _by = $("#byRegisterMedicine").val();
+                var _detail = $("#detailRegisterMedicine").val();
+                var _price =  $("#priceRegisterMedicine").val();
+                var _image = $("#imageRegisterMedicine")[0].files.length;
+
+                if(
+                    _name.length == 0 ||
+                    _ingredient.length == 0 ||
+                    _benefit.length == 0 ||
+                    _by.length == 0 ||
+                    _detail.length == 0 ||
+                    _image == 0 ||
+                    _price.length == 0
+                ) 
+                {
+                    flag = true
+                }
+
+                if(flag == false) {
+                        var account = await getAccount();
+                    infoImage("imageRegisterMedicine").then(res => {
+                        if (res.status == 200) {
+                            imgByte = res.byte32;
+                            signImage(imgByte, account).then(resSign => {
+                                imgNotExist(imgByte, account, 0).then(resCheck => {
+                                    if (resCheck == true) {
+                                        addMedicine($('#nameRegisterMedicine').val(), $(
+                                            '#ingredientRegisterMedicine').val(),
+                                            $('#benefitRegisterMedicine').val(), $(
+                                                '#byRegisterMedicine').val(), $(
+                                                    '#detailRegisterMedicine').val(), $(
+                                                        '#priceRegisterMedicine').val(),
+                                            imgByte, resSign.msgHash, resSign.signMSG).then(
+                                                () => {
+
+                                                    location.reload();
+                                                });
+                                            $('#modalRegisterMedicine').modal('hide');
+                                    } else {
+                                        showError("Error", "Image are already registered");
+                                    }
+                                });
+                            });
+
+                        } else {
+                            showError("Error", 'Upload image fail');
+                        }
+                    })
+                } else {
+                    showError("Error", "Please fill full data");
+                }
+
+
+
+            }
+
+            function getEditMedicine(id, name, ingredient, benefit, by, detail, price, srcImage) {
+                $('#idEditMedicine').val(id);
+                $('#nameEditMedicine').val(name);
+                $('#ingredientEditMedicine').val(ingredient);
+                $('#benefitEditMedicine').val(benefit);
+                $('#byEditMedicine').val(by);
+                $('#priceEditMedicine').val(price);
+                $('#detailEditMedicine').val(detail);
+                $('#viewImageEditMedicine').attr("src", srcImage);
+            }
+
+            function getEditProvider() {
+                checkIsProvider().then(res => {
+                    $('#idEditProvider').val(res[1]);
+                    $('#nameEditProvider').val(res[2]);
+                    $('#streetEditProvider').val(res[3]);
+                    $('#phoneEditProvider').val(res[4]);
+                    $('#viewImageEditProvider').attr("src", "https://ipfs.io/ipfs/" + web3js.utils.hexToString(
+                        res[5]));
+                })
+            }
+
+            async function getViewDigitalCertificate(medicineCode) {
+                account = await getAccount();
+                $.get("/api/medicineByCode", {
+                    code: medicineCode
+                }, function (res) {
+                    console.log('medicineByCode', res);
+                    medicine = res.medicine;
+                    provider = res.provider;
+                    $('#digitalImageMedicine').attr("src", "https://ipfs.io/ipfs/" + medicine[0][7]);
+                    $('#digitalIDMedicine').html(medicine[0][0]);
+                    $('#digitalNameMedicine').html('<b>Name:</b> ' + medicine[0][1]);
+                    $('#digitalIngredientMedicine').html('<b>Ingredient:</b> ' + medicine[0][2]);
+                    $('#digitalBenefitMedicine').html('<b>Benefit:</b> ' + medicine[0][3]);
+                    $('#digitalByMedicine').html('<b>By:</b> ' + medicine[0][4]);
+                    $('#digitalDetailMedicine').html('<b>Detail:</b> ' + medicine[0][5]);
+                    $('#digitalPricesMedicine').html('<b>Prices:</b> ' + medicine[0][6]);
+                    $('#digitalImageProvider').attr("src", "https://ipfs.io/ipfs/" + provider[5]);
+                    $('#digitalIDProvider').text(provider[1]);
+                    $('#digitalNameProvider').html('<b>Name:</b> ' + provider[2]);
+                    $('#digitalStreetProvider').html('<b>Street:</b> ' + provider[3]);
+                    $('#digitalPhoneProvider').html('<b>Phone:</b> ' + provider[4]);
+                    $.get("/api/getDigitalCertifiCateByMedicineId", {
+                        medicineId: medicine[0][0],
+                        providerAddress: account
+                    }, function (infoDigital) {
+                        console.log('getDigitalCertifiCateByMedicineId', infoDigital);
+                        time = new Date(parseInt(infoDigital.data[2]) * 1000).toLocaleString();
+                        $('#digitalIDTime').html('<b>DC-' + medicine[0][8] + ' - ' + time + '</b>');
+                    });
+                    $('#modalDigitalCertificate').modal('show');
+                });
+            }
+
+            async function postEditMedicine() {
+                var imgByte;
+                var account = await getAccount();
+                var flag = false;
+                var _name = $("#nameEditMedicine").val();
+                var _ingredient = $("#ingredientEditMedicine").val();
+                var _benefit = $("#benefitEditMedicine").val();
+                var _by = $("#byEditMedicine").val();
+                var _detail = $("#detailEditMedicine").val();
+                var _price =  $("#priceEditMedicine").val();
+
+                if(
+                    _name.length == 0 ||
+                    _ingredient.length == 0 ||
+                    _benefit.length == 0 ||
+                    _by.length == 0 ||
+                    _detail.length == 0 ||
+                    _price.length == 0
+                ) 
+                {
+                    flag = true
+                }
+                // markLoading($(".modal-footer"));
+                if(flag == false) {
+                    if ($("#imageEditMedicine")[0].files[0]) {
+                        await infoImage("imageEditMedicine").then(res => {
+                            if (res.status == 200) {
+                                console.log(res)
+                                imgByte = res.byte32;
+
+                            } else {
+                                var linkImage = $('#viewImageEditMedicine').attr("src");
+                                imgByte = web3js.utils.toHex(linkImage.substring(linkImage.lastIndexOf('/') + 1));
+                            }
+                        })
+                    } else {
+                        var linkImage = $('#viewImageEditMedicine').attr("src");
+                        imgByte = web3js.utils.toHex(linkImage.substring(linkImage.lastIndexOf('/') + 1));
+                    }
+
+                    signImage(imgByte, account).then(resSign => {
+                        imgNotExist(imgByte, account, $('#idEditMedicine').val()).then(resCheck => {
+                            if (resCheck == true) {
+                                updateMedicine($('#idEditMedicine').val(), $('#nameEditMedicine').val(),
+                                    $('#ingredientEditMedicine').val(),
+                                    $('#benefitEditMedicine').val(), $('#byEditMedicine').val(),
+                                    $('#detailEditMedicine').val(), $('#priceEditMedicine').val(),
+                                    imgByte, resSign.msgHash, resSign.signMSG).then(
+                                        () => {
+                                            location.reload();
+                                        });
+                            } else {
+                                showError("Error", "Image are already registered");
+                            }
+                        });
+                    });
+                } else {
+                    showError("Error", "Please fill full data");
+                }
+
+            }
+
+            async function postEditProvider() {
+                var imgByte;
+                var account = await getAccount();
+                var flag = false;
+                var _name = $("#nameEditProvider").val();
+                var _street = $("#streetEditProvider").val();
+                var _phone = $("#phoneEditProvider").val();
+                if(
+                    _name.length == 0 ||
+                    _street.length == 0 ||
+                    _phone.length == 0 
+                    )
+                {
+                    flag = true
+
+                }
+
+                if(flag == false) {
+                    if ($("#imageEditProvider")[0].files[0]) {
+                        await infoImage("imageEditProvider").then(res => {
+                            if (res.status == 200) {
+                                console.log(res)
+                                imgByte = res.byte32;
+
+                            } else {
+                                console.log('Upload image fail');
+                                var linkImage = $('#viewImageEditProvider').attr("src");
+                                imgByte = web3js.utils.toHex(linkImage.substring(linkImage.lastIndexOf('/') + 1));
+                            }
+                        })
+                    } else {
+                        var linkImage = $('#viewImageEditProvider').attr("src");
+                        imgByte = web3js.utils.toHex(linkImage.substring(linkImage.lastIndexOf('/') + 1));
+                    }
+                    signImage(imgByte, account).then(resSign => {
+                        imgNotExist(imgByte, account, $('#idEditProvider').val()).then(resCheck => {
+                            if (resCheck == true) {
+                                updateProvider($('#idEditProvider').val(), $('#nameEditProvider').val(),
+                                    $('#streetEditProvider').val(),
+                                    $('#phoneEditProvider').val(),
+                                    imgByte, resSign.msgHash, resSign.signMSG).then(() => {
+                                        $('#modalEditProvider').modal('hide');
+                                        location.reload();
+                                    });
+                            } else {
+                                showError("Error", "Image are already registered");
+                            }
+                        });
+                    });
+                } else {
+                    showError("Error", "Please fill full data")
+                }
+             
+            }
+
+            async function postRefundETH(id) {
+                refundETH(id);
+            }
+
+            $(document).ready(async function () {
+                showLoad();
+                accountDefault = '0x0';
+                checkRegistered();
+                setInterval(() => {
+                    checkRegistered();
+                }, 1000);
+
+                $('#modalRegisterProvider').on('hidden.bs.modal', function () {
+                    window.location.href = "/";
+                })
+            });
+        </script>
+    </div>
+</body>
+
+</html>
