@@ -146,7 +146,8 @@
                     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div class="modal-content modal-content-custom container">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="modalViewWaitingApproveRegisterTitle">Transaction Information</h5>
+                                <h5 class="modal-title" id="modalViewWaitingApproveRegisterTitle">Transaction
+                                    Information</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -325,7 +326,7 @@
 
             async function checkRegistered() {
                 account = await getAccount()
-                if(accountDefault!=account){
+                if (accountDefault != account) {
                     location.reload();
                 }
                 checkIsManager().then((res) => {
@@ -355,13 +356,13 @@
                         <td> ${transactionTypes(v[5])} </td>
                         <td> ${time}</td>
                         <td>
-                            <button class="btn btn-success ahoang" data="${v[5]},${v[0]},'${v[1]}',${v[8]}" onclick="viewTransaction(${v[5]},${v[0]},'${v[1]}',${v[8]})">View</button>
+                            <button class="btn btn-success" onclick="viewTransaction(${v[5]},'${(v[0])}','${v[1]}',${v[8]})">View</button>
                         </td>
                     </tr>`
                         })
                     }
                     $("#tbodyTableWaitingApprove").html(tbody);
-                    $("#tableWaitingApprove").DataTable().reload;
+                    // $("#tableWaitingApprove").DataTable().reload;
                 })
             }
 
@@ -391,35 +392,35 @@
                 })
             }
 
-            function viewTransaction(type, id, from, index) {
-                console.log("view", type, id, from, index)
+            function viewTransaction(type,_id, from, index) {
+                console.log("id",_id);
                 switch (type) {
                     case 0:
-                        viewTransactionRegisterProvider(id, from, index);
+                        viewTransactionRegisterProvider(_id, from, index);
                         break;
                     case 1:
-                        viewTransactionUpdateProvider(id, from, index);
+                        viewTransactionUpdateProvider(_id, from, index);
                         break;
                     case 2:
-                        viewTransactionRegisterProvider(id, from, index); // block provider
+                        viewTransactionRegisterProvider(_id, from, index); // block provider
                         break;
                     case 3:
-                        viewTransactionRegisterMedicine(id, from, index);
+                        viewTransactionRegisterMedicine(_id, from, index);
                         break;
                     case 4:
-                        viewTransactionUpdateMedicine(id, from, index);
+                        viewTransactionUpdateMedicine(_id, from, index);
                         break;
                     case 5:
-                        viewTransactionBlockMedicine(id, from, index);
+                        viewTransactionBlockMedicine(_id, from, index);
                         break;
                     case 6:
-                        viewTransactionRegisterProvider(id, from, index); // unlock provider
+                        viewTransactionRegisterProvider(_id, from, index); // unlock provider
                         break;
                     case 7:
-                        viewTransactionBlockMedicine(id, from, index);
+                        viewTransactionBlockMedicine(_id, from, index);
                         break;
                     case 8:
-                        viewTransactionReport(id, from, index);
+                        viewTransactionReport(_id, from, index);
                         break;
                     default:
                         // convertType = "NAN"
@@ -458,13 +459,15 @@
             async function viewTransactionRegisterMedicine(id, from, index) {
                 let account = await getAccount();
                 let imageHash;
-                let idMedicine; 
-                await $.get("api/medicineByCode", { code: id}, function (res) {
+                let idMedicine;
+                await $.get("api/medicineByCode", { code: id }, function (res) {
+                    if (res.status != 200)
+                        return showError('Error','Status 400!...');
                     var medicine = res.medicine;
                     var provider = res.provider;
                     console.log("ress", medicine)
                     console.log("provider", provider)
-                    imageHash =  medicine[0][7]
+                    imageHash = medicine[0][7]
                     idMedicine = medicine[0][0]
                     $('#viewImageRegister').attr('src', 'https://ipfs.io/ipfs/' + medicine[0][7])
                     $('#contentRegister').html(`
@@ -490,22 +493,24 @@
                         </div>
                     </div>
                     `)
+                    $('#btnConfirmRegister').attr("onClick", 'confirmTransaction(' + index + '); $("#modalViewWaitingApproveRegister").modal("hide")')
+                    $('#btnRejectRegister').attr("onClick", 'rejectTransaction(' + index + '); $("#modalViewWaitingApproveRegister").modal("hide")')
+                    checkImgNotExist(web3js.utils.toHex(imageHash), idMedicine).then(resCheck => {
+                        if (resCheck == false) {
+                            $('#noteImageRegister').text('Image are already registered')
+                            $('#btnConfirmRegister').prop('disabled', true);
+                        } else {
+                            $('#noteImageRegister').text('')
+                            $('#btnConfirmRegister').prop('disabled', false);
+                        }
+                    })
+
+                    $('#modalViewWaitingApproveRegister').modal('show')
                 })
 
-                $('#btnConfirmRegister').attr("onClick", 'confirmTransaction(' + index + '); $("#modalViewWaitingApproveRegister").modal("hide")')
-                $('#btnRejectRegister').attr("onClick", 'rejectTransaction(' + index + '); $("#modalViewWaitingApproveRegister").modal("hide")')
 
-                checkImgNotExist(web3js.utils.toHex(imageHash), idMedicine).then(resCheck => {
-                    if (resCheck == false) {
-                        $('#noteImageRegister').text('Image are already registered')
-                        $('#btnConfirmRegister').prop('disabled', true);
-                    } else {
-                        $('#noteImageRegister').text('')
-                        $('#btnConfirmRegister').prop('disabled', false);
-                    }
-                })
 
-                $('#modalViewWaitingApproveRegister').modal('show')
+
             }
 
             async function viewTransactionUpdateProvider(id, from, index) {
@@ -687,7 +692,7 @@
                 $('#tableListReport').DataTable().reload;
                 $('#btnConfirmReport').attr("onClick", 'confirmTransaction(' + index + '); $("#modalViewWaitingApproveReport").modal("hide")')
                 $('#btnRejectReport').attr("onClick", 'rejectTransaction(' + index + '); $("#modalViewWaitingApproveReport").modal("hide")')
-                
+
                 $('#modalViewWaitingApproveReport').modal('show')
             }
 
@@ -715,7 +720,7 @@
                 table.search(id);
             }
 
-            $(document).ready( async function () {
+            $(document).ready(async function () {
                 showLoad();
                 accountDefault = await getAccount();
                 checkRegistered();

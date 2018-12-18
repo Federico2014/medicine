@@ -82,12 +82,12 @@
                 <div class="row align-items-center">
                   <div class="col-lg-6">
                     <div id="resultImage" class="p-5">
-                      <img class="img-fluid" src="img/02.jpg" alt="resultImage">
+                      <img class="img-fluid" src="img/02.jpg" alt="Not Found">
                     </div>
                   </div>
                   <div class="col-lg-6">
                     <div class="p-5">
-                      <h4 class="display-5" style="text-align: left; display: flex; justify-content: space-between" id="resultName">resultName</h4>
+                      <h4 class="display-5" style="text-align: left; display: flex; justify-content: space-between" id="resultName">Not Found</h4>
                       <div id="detailResult" style="text-align: left">
                       </div>
                       <div id="options" style="text-align: left">
@@ -247,7 +247,11 @@
       }
     });
 
-    function checkShowLink() {
+    async function checkShowLink() {
+      account = await getAccount();
+      if(account!= accountDefault){
+        location.reload();
+      }
       checkIsProvider().then((res) => {
         if (!res[0].startsWith("0x0000")){
           document.getElementById('linkProvider').hidden = false;
@@ -264,6 +268,12 @@
         else
           document.getElementById('linkManager').hidden = true;
       })
+      // if(accountDefault != res[0]) {
+      //     accountDefault = res[0];
+      //     showPage();
+      // }
+
+
     }
 
     async function search() {
@@ -332,16 +342,16 @@
           }, function (res) {
               if(res.status == 200 ) {
                 checkIsManager().then(isManager =>  {
-                    if (res.status == 200 && res.provider[1] != 0) {
-                      $('#resultImage').html('<img class="img-fluid" src="https://ipfs.io/ipfs/' + res.provider[5] +
-                        '" alt="">');
-                      $('#resultName').html('<b>' + res.provider[2] + '</b>');
-                      $('#detailResult').html(
-                        `<p><b>ID:</b> ${res.provider[1]}</p>
-                                <p><b>Street:</b> ${res.provider[3]}</p>
-                                <p><b>Phone: </b>${res.provider[4]}</p>
-                                <p><b>Status: </b>${res.provider[6]}</p>
-                                `
+                      if (res.status == 200 && res.provider[1] != 0) {
+                          $('#resultImage').html('<img class="img-fluid" src="https://ipfs.io/ipfs/' + res.provider[5] +
+                            '" alt="">');
+                          $('#resultName').html('<b>' + res.provider[2] + '</b>');
+                          $('#detailResult').html(
+                            `<p><b>ID:</b> ${res.provider[1]}</p>
+                                    <p><b>Street:</b> ${res.provider[3]}</p>
+                                    <p><b>Phone: </b>${res.provider[4]}</p>
+                                    <p><b>Status: </b>${res.provider[6]}</p>
+                            `
                       );
 
                       if(isManager) {
@@ -432,9 +442,9 @@
       });
     }
 
-    $(document).ready(function () {
+    $(document).ready(async function () {
       showLoad();
-
+      accountDefault = await getAccount();
       setTimeout(() => {
         showPage()
       }, 500);

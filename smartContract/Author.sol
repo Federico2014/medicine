@@ -16,7 +16,7 @@ contract Authorised is Owner {
     address  medicineContractAddress;
     address  certificateContractAddress;
     address reportContractAddress;
-    address signatureContractAddress;
+    address signatureContractAddress; 
     address[] public owners;
     mapping(address => bool) authorised;
     uint8 maxAuthorisedNumber = 10;
@@ -44,8 +44,23 @@ contract Authorised is Owner {
     mapping(uint => bool) unlocked;
     mapping(uint => uint) idsTransactionBlocked;
     mapping(uint => uint) idsTransactionUnlocked;
-    
-    
+
+    function authorIsBlocked(uint _id, address _addr ) public view returns(bool) {
+        uint _idsTran = idsTransactionBlocked[_id];
+        if(_idsTran == 0) {
+            return false;
+        }
+        return confirmations[_idsTran][_addr]; 
+    }
+
+    function authorIsUnlocked(uint _id, address _addr ) public view returns(bool) {
+        uint _idsTran = idsTransactionUnlocked[_id];
+        if(_idsTran == 0) {
+            return false;
+        }
+        return confirmations[_idsTran][_addr]; 
+    }
+
     uint public  transactionCount = 0;
 
     modifier onlyCallByProviderContract(address _addr) {
@@ -295,12 +310,14 @@ contract Authorised is Owner {
         return idsTransactionUnlocked[_id];
     }
 
+    
+
     function confirmedTransaction(
         uint _identifier
     ) 
         public
         transactionExists(_identifier)
-        notConfirmedAndReject(_identifier, msg.sender) 
+        notConfirmedAndReject(_identifier, tx.origin) 
         notExecuted(_identifier)
         onlyAuthorised() 
 
@@ -313,7 +330,7 @@ contract Authorised is Owner {
         Transaction storage _trans = transactions[_identifier];
 
         _trans.numberOfComfirmed += 1;
-        confirmations[_identifier][msg.sender] = true;
+        confirmations[_identifier][tx.origin] = true;
          //0 is insert provider, 1 is update provider,2 is block provider, 3 is insert medicine, 4 is update medicine, 5 is delete medicine
         if(_trans.numberOfComfirmed >= totalRequired && _trans.numberReject < totalRequired) {
             _trans.status = true;
@@ -391,34 +408,34 @@ contract Authorised is Owner {
         return _transactionsID;
     }
     
-    function getTransactionStatus(
-        uint _id
-    )
-        public
-        view
-        returns(uint)
-    {
-        for(uint i = 0; i < transactionCount; i++) {
-            if(transactions[i].identifier == _id) {
-                if(transactions[i].numberOfComfirmed < totalRequired && 
-                   transactions[i].numberReject < totalRequired &&
-                   transactions[i].status == false
-                ) 
-                {
-                    return 0; // waitting
-                }
+    // function getTransactionStatus(
+    //     uint _id
+    // )
+    //     public
+    //     view
+    //     returns(uint)
+    // {
+    //     for(uint i = 0; i < transactionCount; i++) {
+    //         if(transactions[i].identifier == _id) {
+    //             if(transactions[i].numberOfComfirmed < totalRequired && 
+    //               transactions[i].numberReject < totalRequired &&
+    //               transactions[i].status == false
+    //             ) 
+    //             {
+    //                 return 0; // waitting
+    //             }
                 
-                if(transactions[i].numberReject < totalRequired  && transactions[i].status == true) {
-                    return 1; // confirmed
-                }
+    //             if(transactions[i].numberReject < totalRequired  && transactions[i].status == true) {
+    //                 return 1; // confirmed
+    //             }
                 
-                if(transactions[i].numberOfComfirmed < totalRequired && transactions[i].status == true) {
-                    return 2; // rejects
-                }
+    //             if(transactions[i].numberOfComfirmed < totalRequired && transactions[i].status == true) {
+    //                 return 2; // rejects
+    //             }
                 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
     
     
 
@@ -446,7 +463,13 @@ contract Authorised is Owner {
         Transaction storage _trans = transactions[_id];
         _trans.numberReject += 1;
         rejects[_id][msg.sender] = true;
-        if(_trans.numberOfComfirmed < totalRequired && _trans.numberReject >= totalRequired) {
+        
+        if((_trans.numberOfComfirmed < totalRequired && _trans.numberReject >= totalRequired) ||
+            (_trans.numberOfComfirmed < totalRequired && 
+            (_trans.numberOfComfirmed + _trans.numberReject) >= totalRequired && 
+            _trans.numberOfComfirmed <= _trans.numberReject) 
+        ) 
+        {
             _trans.status = true;
             Reports _report = Reports(reportContractAddress);
             Signature _sig = Signature(signatureContractAddress);
@@ -462,8 +485,14 @@ contract Authorised is Owner {
                 }
             }
             
+            if(_trans.Type == 2 || _trans.Type == 5) {
+                blocked[_trans.identifier] = false;
+            }
+            
+            if(_trans.Type == 6 || _trans.Type == 7 ) {
+                unlocked[_trans.identifier] = false;
+            }
         }
-        
     }
     
     
@@ -623,7 +652,7 @@ contract Authorised is Owner {
         uint count = 0;
         uint[] memory _temp = new uint[](transactionCount);
         for(uint i = 0; i < transactionCount; i++) {
-             if(confirmations[i][_from]) {
+             if(confirmations[i][_from] || rejects[i][_from]) {
                  _temp[count] = i;
                  count++;
              }
@@ -631,7 +660,7 @@ contract Authorised is Owner {
          
          uint[] memory _transactionIds = new uint[](count);
         for( i = 0; i < _transactionIds.length; i++) {
-             if(confirmations[_temp[i]][_from]) {
+             if(confirmations[_temp[i]][_from] || rejects[_temp[i]][_from] ) {
                  _transactionIds[i] = _temp[i];
              }
         }
